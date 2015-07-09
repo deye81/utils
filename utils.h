@@ -2,7 +2,7 @@
 #define DEYE81_UTILS_H
 
 #include <type_traits>
-#include <numeric_limits>
+#include <limits>
 #include <exception>
 #include <string>
 
@@ -14,12 +14,12 @@ namespace deye81 { namespace utils {
         //TODO: Support floating point numbers
         static_assert(std::is_integral<T>::value, "deye81::utils::numDigits(T number): T must be an integral type");
 
-        unsigned numDigits = 1;
+        unsigned numDigits = 0;
         while(number) {
             number /= 10;
-            numDigits++
+            numDigits++;
         }
-        return res;
+        return numDigits;
     }
     
     template<typename T>
@@ -58,6 +58,31 @@ namespace deye81 { namespace utils {
         }
 
         return *str == '-' ? -res : res;
+    }
+    
+    template<typename T>
+    std::string asString(T number)
+    {
+        using namespace std;
+
+        // TODO: Support floating-point numbers
+        static_assert(is_integral<T>::value, "Non-integral types can't be converted to strings");
+        
+        // Build a string whose size is the number of digits in the number
+        auto strLen = numDigits(number) + 1;
+        unique_ptr<char[]> strBuffer(new char[strLen]);
+        strBuffer[strLen] = '\0'; 
+        
+        // Iterate over the string in the reverse direction while inserting digits from
+        // the number
+        auto idx = strLen - 2;  
+        while(number) {
+            strBuffer[idx--] = (number % 10) + '0';
+            number /= 10;
+        }
+
+        // Done 
+        return string(strBuffer.get());
     }
 
 

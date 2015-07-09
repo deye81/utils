@@ -16,13 +16,13 @@ py_utils_target_dir += str(ver[0]) + '.' + str(ver[1]) + '.' + str(ver[2])
 py_utils_target = os.path.join(py_utils_target_dir, 'utils.so')    
 
 # Sources
-# We need to rebuild the utilss module (both the python extension module and the c++ module)
+# We need to rebuild the utils module (both the python extension module and the c++ module)
 srcs = ['utils.h']
 
 
-def build_utilss_py_extn(target, source, env):
-    # Invoke distutilss on setup.py to build and install
-    # the utilss python extension module. 
+def build_utils_py_extn(target, source, env):
+    # Invoke distutils on setup.py to build and install
+    # the utils python extension module. 
     call(['python', 'setup.py', 'build', '--build-base=' + py_build_dir])
     call(['python', 'setup.py', 'install', '--prefix=' + py_install_prefix]),
     return None
@@ -31,11 +31,19 @@ def build_function(target, source, env):
    # Code to build "target" from "source"
    return None
    
-# Create a SCons builder that uses the above function to build the utilss python
+# Create a SCons builder that uses the above function to build the utils python
 # extension module
 env = Environment()
-bld = Builder(action=build_utilss_py_extn)
+env.Append(CXXFLAGS = '-std=c++11')
+bld = Builder(action=build_utils_py_extn)
+debug = ARGUMENTS.get('debug', 0)
+if int(debug):
+   env.Append(CCFLAGS = '-g')
+
 env.Append(BUILDERS = {'UtilPyBuilder': bld})
 env.UtilPyBuilder(py_utils_target, srcs)
 
 
+# C++ tester
+env.Object(target='build/c++/main.o', source=['main.cpp'])
+env.Program(target='bin/driver', source=['build/c++/main.o'])
