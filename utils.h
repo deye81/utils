@@ -19,7 +19,7 @@ namespace deye81 { namespace utils {
         do {
             numDigits++;
             number /= 10;
-        } while(number)
+        } while(number);
 
         return numDigits;
     }
