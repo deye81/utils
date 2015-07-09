@@ -15,10 +15,12 @@ namespace deye81 { namespace utils {
         static_assert(std::is_integral<T>::value, "deye81::utils::numDigits(T number): T must be an integral type");
 
         unsigned numDigits = 0;
-        while(number) {
-            number /= 10;
+
+        do {
             numDigits++;
-        }
+            number /= 10;
+        } while(number)
+
         return numDigits;
     }
     
