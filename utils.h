@@ -9,12 +9,12 @@
 namespace deye81 { namespace utils {
     
     template<typename T>
-    unsigned numDigits(T number)
+    unsigned char numDigits(T number)
     {
         //TODO: Support floating point numbers
         static_assert(std::is_integral<T>::value, "deye81::utils::numDigits(T number): T must be an integral type");
 
-        unsigned numDigits = 0;
+        unsigned char numDigits = 0;
 
         do {
             numDigits++;
@@ -45,8 +45,8 @@ namespace deye81 { namespace utils {
             if(++numChars > maxStrLen) {
                 throw std::invalid_argument(std::string(str) + " is not a valid number for the requested type.\n"
                                             " The requested type's range is [" + 
-                                            std::numeric_limits<T>::min() + "," +
-                                            std::numeric_limits<T>::max() + "]");
+                                            std::to_string(std::numeric_limits<T>::min()) + "," +
+                                            std::to_string(std::numeric_limits<T>::max()) + "]");
             } 
             ++itr;
         }

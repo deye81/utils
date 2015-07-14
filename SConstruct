@@ -27,10 +27,6 @@ def build_utils_py_extn(target, source, env):
     call(['python', 'setup.py', 'install', '--prefix=' + py_install_prefix]),
     return None
 
-def build_function(target, source, env):
-   # Code to build "target" from "source"
-   return None
-   
 # Create a SCons builder that uses the above function to build the utils python
 # extension module
 env = Environment()
@@ -39,7 +35,6 @@ bld = Builder(action=build_utils_py_extn)
 debug = ARGUMENTS.get('debug', 0)
 if int(debug):
    env.Append(CCFLAGS = '-g')
-
 env.Append(BUILDERS = {'UtilPyBuilder': bld})
 env.UtilPyBuilder(py_utils_target, srcs)
 
